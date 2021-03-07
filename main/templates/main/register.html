@@ -1,0 +1,22 @@
+{% extends "main/base.html" %}
+
+{% block content %} 
+
+{% load crispy_forms_tags %}         
+
+<div class="container py-1">
+	<h2>Register</h2>
+	<form method="POST">
+		{% csrf_token %}
+		{{ register_form|crispy }}                    
+		<button class="btn btn-primary" type="submit">Register</button>
+	</form>
+	{% for message in messages %}
+	<div class="alert alert-danger mt-2" role="alert">
+		{{message}}
+	</div>
+	{% endfor %}
+	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+</div>
+
+{% endblock %}
