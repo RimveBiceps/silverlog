@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'main',
+    'alphavantage_api',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',

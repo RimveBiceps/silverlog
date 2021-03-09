@@ -1,14 +1,23 @@
 {% extends "main/base.html" %}
 
-{% block content %}
-
-<div class="container py-1">
-  <h2>Home</h2>
-  <p class="text-center">
-    <a href="/register">Register</a> or
-    <a href="/login">Login</a><br />
-  </p>
+{% block content_offline %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <h5 class="mt-2">Welcome to Silverlog</h5>
+      <hr class="mt-0">
+      <p class="text-center">
+        <a href="/register">Register</a> or
+        <a href="/login">Login</a><br />
+      </p>
+    </div>
+  </div>
 </div>
+
+{% endblock %}
+{% block content_online %}
+
+You are logged in.
 
 {% endblock %}
 
