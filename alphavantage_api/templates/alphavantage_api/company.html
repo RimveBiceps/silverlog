@@ -1,19 +1,29 @@
 {% extends "main/base.html" %}
 
 {% block content_online %}
+{% load crispy_forms_tags %}
 
 <div class="container py-1">
-  <h2>Companies</h2>
+    <h2>Companies</h2>
+    <p class="text-center">Search for Company Overview by entering company acronym.</p>
+    <form method="GET">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
 </div>
+
+{{ company_result_data }}
+
 {% endblock %}
 
 {% block message %}
 
 <!--Success Messages-->
-<!-- {% for message in messages %}
-<div class="alert alert-success mt-2" role="alert">
+{% for message in messages %}
+<div class="alert alert-danger mt-2" role="alert">
   {{message}}
-</div> -->
-<!-- {% endfor %} -->
+</div>
+{% endfor %}
 
 {% endblock %}
