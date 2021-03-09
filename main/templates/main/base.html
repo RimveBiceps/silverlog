@@ -43,12 +43,10 @@
       </ul>
     </div>
   </nav>
-  <!--Success Messages-->
-  {% for message in messages %}
-  <div class="alert alert-success mt-2" role="alert">
-    {{message}}
-  </div>
-  {% endfor %}
+
+  {% block message %}
+  {% endblock %}
+  
   <!--Offline Page-->
   {% if not user.is_authenticated %}
 
