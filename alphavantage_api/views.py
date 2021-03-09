@@ -9,8 +9,6 @@ import json
 
 @login_required
 def handle_company(request):
-    # if a POST (or any other method) we'll create a blank form
-    form = CompanySearchForm()
     context = {}
     if request.method == "GET":
         # create a form instance and populate it with data from the request:
@@ -23,7 +21,10 @@ def handle_company(request):
                 messages.error(request, "Company doesn't exist.")
             else:
                 context["company_result_data"] = company_data
-            
+        # if a POST (or any other method) we'll create a blank form
+        else:
+            form = CompanySearchForm()
+
     context["form"] = form
     return render(request=request, template_name="alphavantage_api/company.html", context=context)
 
