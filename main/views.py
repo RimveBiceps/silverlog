@@ -3,6 +3,7 @@ from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 
 def handle_home(request):
@@ -46,3 +47,8 @@ def handle_logout(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("main:home")
+
+
+@login_required
+def handle_profile(request):
+    return render(request=request, template_name="main/profile.html")
