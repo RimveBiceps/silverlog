@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.shortcuts import render
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from . import constants
 from .forms import CompanySearchForm
 import requests
 import json
 
 
+@login_required
 def handle_company(request):
     # if a POST (or any other method) we'll create a blank form
     form = CompanySearchForm()
