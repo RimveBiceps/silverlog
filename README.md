@@ -46,3 +46,7 @@ Additional info:
 
 * You can create new app ```python3 manage.py startapp appname```
 * Requirements ```pip3 install django-crispy-forms```
+--------------------------------
+API KEY
+
+* You need to add your own API KEY in alphavantage_api app, constants file.
