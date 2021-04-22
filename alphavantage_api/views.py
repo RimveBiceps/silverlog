@@ -85,3 +85,8 @@ def handle_favorite_companies(request):
     context['fav_comp'] = fav_companies_list
 
     return render(request=request, template_name="alphavantage_api/favorite_companies.html", context=context)
+
+@login_required
+def handle_graphs(request):
+    print('test')
+    return render(request=request, template_name="alphavantage_api/graphs.html")
