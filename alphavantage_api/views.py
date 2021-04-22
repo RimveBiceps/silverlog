@@ -5,6 +5,8 @@ from . import constants
 from .forms import CompanySearchForm
 import requests
 import json
+import pandas as pd
+from django.contrib.staticfiles import finders
 
 
 @login_required
@@ -39,3 +41,12 @@ def make_api_request(company_acronym):
     response_json = response.json()
 
     return response_json
+
+@login_required
+def handle_company_acronym(request):
+    symbols_file = finders.find('main/nasdaq_screener_1619112811294.csv')
+
+    df = pd.read_csv(symbols_file)
+    df_list = [x if not 'nan' in x else '' for x in df.values]
+
+    return render(request=request, template_name="alphavantage_api/company_acronyms.html", context={'pd_company_acronyms': df_list})
