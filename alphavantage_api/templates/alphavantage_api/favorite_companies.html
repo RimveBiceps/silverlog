@@ -1,0 +1,24 @@
+{% extends "main/base.html" %}
+
+{% block content_online %}
+<div class="container py-1">
+  <h2>Favorite companies</h2>
+</div>
+<table border="1">
+  <tr>
+    <th>Company acronym</th>
+    <th>Remove</th>
+    {% for company in fav_comp %}
+        <tr>
+          <td>{{ company.company_acr }}</td>
+          <td align="center">
+            <a  href="#"
+                onclick="return confirm('Are you sure you want to delete?');"
+                data-value="{{ company.company_acr }}">-</a>
+            </td>
+        </tr>
+    {% endfor %}
+  </tr>
+</table>
+
+{% endblock %}s

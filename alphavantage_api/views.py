@@ -14,6 +14,7 @@ from alphavantage_api.models import FavoriteCompanies
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
+from .models import FavoriteCompanies
 
 @login_required
 def handle_company(request):
@@ -57,13 +58,13 @@ def handle_company_acronym(request):
 
     return render(request=request, template_name="alphavantage_api/company_acronyms.html", context={'pd_company_acronyms': df_list})
 
+@login_required
 @csrf_exempt
 def fav_company(request):
     company_symbol = request.POST.get('company_symbol')
     if not company_symbol:
         raise ValueError("Required company_symbol to set company as favorite")
-    # can be set user id once authentication is set
-    #some_id = request.user.pk
+
     user_id = request.user.pk
     try:
         fav_companies_obj = {
@@ -72,8 +73,15 @@ def fav_company(request):
         }
         FavoriteCompanies(**fav_companies_obj).save()
     except ObjectDoesNotExist:
-        ## Your action
-        ## raise or Return HTTP response with failure status_code
+        # raise or Return HTTP response with failure status_code
         return HttpResponse('Some error occured, unable to add to wishlist') ## or can set for render
         
-    return HttpResponse('Added to favorites!') ## or can set for render
+    return HttpResponse('Added to favorites!') # or can set for render
+
+@login_required
+def handle_favorite_companies(request):
+    context = {}
+    fav_companies_list = FavoriteCompanies.objects.all()
+    context['fav_comp'] = fav_companies_list
+
+    return render(request=request, template_name="alphavantage_api/favorite_companies.html", context=context)

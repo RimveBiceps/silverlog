@@ -10,8 +10,6 @@
     <p class="text-center">Search for Company Overview by entering company acronym.<br/>
     Check company acronyms menu page for available symbols.</p>
 
-
-
     <form method="GET">
         {% csrf_token %}
         {{ form|crispy }}
@@ -20,7 +18,7 @@
 </div>
 
 {% if company_result_data %}
-<span class="like"><i class="fa fa-heart"></i></span>
+<span class="like"><i class="fa fa-heart"></i></span> Add to Favorites<br/>
 {{ company_result_data }}
 {% endif %}
 
