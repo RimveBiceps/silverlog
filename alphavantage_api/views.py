@@ -47,6 +47,6 @@ def handle_company_acronym(request):
     symbols_file = finders.find('main/nasdaq_screener_1619112811294.csv')
 
     df = pd.read_csv(symbols_file)
-    df_list = [x if not 'nan' in x else '' for x in df.values]
+    df_list = [x for x in df.values]
 
     return render(request=request, template_name="alphavantage_api/company_acronyms.html", context={'pd_company_acronyms': df_list})
