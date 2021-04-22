@@ -117,3 +117,6 @@ GitHub.sublime-settings
 
 # API KEY #
 aplhavantage_api/constants.py
+
+# migrations
+alphavantage_api/migrations/

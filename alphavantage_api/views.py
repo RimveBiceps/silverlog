@@ -5,8 +5,14 @@ from . import constants
 from .forms import CompanySearchForm
 import requests
 import json
+
 import pandas as pd
 from django.contrib.staticfiles import finders
+
+from django.views.decorators.csrf import csrf_exempt
+from alphavantage_api.models import FavoriteCompanies
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 
 
 @login_required
@@ -50,3 +56,24 @@ def handle_company_acronym(request):
     df_list = [x for x in df.values]
 
     return render(request=request, template_name="alphavantage_api/company_acronyms.html", context={'pd_company_acronyms': df_list})
+
+@csrf_exempt
+def fav_company(request):
+    company_symbol = request.POST.get('company_symbol')
+    if not company_symbol:
+        raise ValueError("Required company_symbol to set company as favorite")
+    # can be set user id once authentication is set
+    #some_id = request.user.pk
+    user_id = request.user.pk
+    try:
+        fav_companies_obj = {
+            'user_id': user_id,
+            'company_acr': company_symbol
+        }
+        FavoriteCompanies(**fav_companies_obj).save()
+    except ObjectDoesNotExist:
+        ## Your action
+        ## raise or Return HTTP response with failure status_code
+        return HttpResponse('Some error occured, unable to add to wishlist') ## or can set for render
+        
+    return HttpResponse('Added to favorites!') ## or can set for render

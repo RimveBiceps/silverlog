@@ -1,11 +1,17 @@
 {% extends "main/base.html" %}
+{% load static %}
+<link href="{% static 'main/style.css' %}" rel="stylesheet">
 
 {% block content_online %}
 {% load crispy_forms_tags %}
 
 <div class="container py-1">
     <h2>Companies</h2>
-    <p class="text-center">Search for Company Overview by entering company acronym.</p>
+    <p class="text-center">Search for Company Overview by entering company acronym.<br/>
+    Check company acronyms menu page for available symbols.</p>
+
+
+
     <form method="GET">
         {% csrf_token %}
         {{ form|crispy }}
@@ -13,7 +19,10 @@
     </form>
 </div>
 
+{% if company_result_data %}
+<span class="like"><i class="fa fa-heart"></i></span>
 {{ company_result_data }}
+{% endif %}
 
 {% endblock %}
 
