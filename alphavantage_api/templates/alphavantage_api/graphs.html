@@ -1,9 +1,33 @@
 {% extends "main/base.html" %}
 
 {% block content_online %}
+{% load crispy_forms_tags %}
+
 <div class="container py-1">
   <h2>Graphs</h2>
   Graphs of your favorite companies.
 </div>
 
-{% endblock %}s
+<form method="GET">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-primary" type="submit">Enter</button>
+</form>
+
+{% if graph_result_data %}
+<table class="table table-bordered">
+    {% for key, values in graph_result_data.items %}
+   
+        
+        {% for k, v in values.items %}
+        <tr>
+        <td>{{k}}</td>
+        <td>{{v}}</td>
+    </tr>
+        {% endfor %}
+
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}

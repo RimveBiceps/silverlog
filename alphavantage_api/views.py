@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . import constants
-from .forms import CompanySearchForm
+from .forms import CompanySearchForm, GraphsForm
 import requests
 import json
 
@@ -81,12 +81,36 @@ def fav_company(request):
 @login_required
 def handle_favorite_companies(request):
     context = {}
-    fav_companies_list = FavoriteCompanies.objects.all()
+    fav_companies_list = FavoriteCompanies.objects.filter(user_id=request.user.pk)
     context['fav_comp'] = fav_companies_list
 
     return render(request=request, template_name="alphavantage_api/favorite_companies.html", context=context)
 
 @login_required
 def handle_graphs(request):
-    print('test')
-    return render(request=request, template_name="alphavantage_api/graphs.html")
+    context = {}
+    if request.method == "GET":
+        # create a form instance and populate it with data from the request:
+        form = GraphsForm(request.user.pk, request.GET)
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            company_title = form.cleaned_data['company_title']
+            time_series = form.cleaned_data['time_series']
+            data = {
+                "function": time_series,
+                "symbol": company_title,
+                "apikey": constants.API_KEY
+            }
+            response = requests.get(constants.API_URL, data)
+            response_json = response.json()
+            if not response_json:
+                messages.error(request, "Something went wrong...")
+            else:
+                context["graph_result_data"] = response_json
+                print(list(response_json.keys()))
+        # if a POST (or any other method) we'll create a blank form
+        else:
+            form = GraphsForm(request.user.pk)
+
+    context["form"] = form
+    return render(request=request, template_name="alphavantage_api/graphs.html", context=context)
