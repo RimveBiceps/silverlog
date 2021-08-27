@@ -4,17 +4,16 @@ from django.contrib.auth.decorators import login_required
 from . import constants
 from .forms import CompanySearchForm, GraphsForm
 import requests
-import json
 
 import pandas as pd
 from django.contrib.staticfiles import finders
 
 from django.views.decorators.csrf import csrf_exempt
-from alphavantage_api.models import FavoriteCompanies
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
 from .models import FavoriteCompanies
+
 
 @login_required
 def handle_company(request):
@@ -49,6 +48,7 @@ def make_api_request(company_acronym):
 
     return response_json
 
+
 @login_required
 def handle_company_acronym(request):
     symbols_file = finders.find('main/nasdaq_screener_1619112811294.csv')
@@ -56,7 +56,9 @@ def handle_company_acronym(request):
     df = pd.read_csv(symbols_file)
     df_list = [x for x in df.values]
 
-    return render(request=request, template_name="alphavantage_api/company_acronyms.html", context={'pd_company_acronyms': df_list})
+    return render(request=request, template_name="alphavantage_api/company_acronyms.html",
+                  context={'pd_company_acronyms': df_list})
+
 
 @login_required
 @csrf_exempt
@@ -74,9 +76,10 @@ def fav_company(request):
         FavoriteCompanies(**fav_companies_obj).save()
     except ObjectDoesNotExist:
         # raise or Return HTTP response with failure status_code
-        return HttpResponse('Some error occured, unable to add to wishlist') ## or can set for render
-        
-    return HttpResponse('Added to favorites!') # or can set for render
+        return HttpResponse('Some error occured, unable to add to wishlist')  ## or can set for render
+
+    return HttpResponse('Added to favorites!')  # or can set for render
+
 
 @login_required
 def handle_favorite_companies(request):
@@ -85,6 +88,7 @@ def handle_favorite_companies(request):
     context['fav_comp'] = fav_companies_list
 
     return render(request=request, template_name="alphavantage_api/favorite_companies.html", context=context)
+
 
 @login_required
 def handle_graphs(request):
@@ -107,7 +111,8 @@ def handle_graphs(request):
                 messages.error(request, "Something went wrong...")
             else:
                 context["graph_result_data"] = response_json
-                print(list(response_json.keys()))
+                context["meta_data"] = response_json['Meta Data']
+                del context['graph_result_data']['Meta Data']  # meta data will be saved in meta_data key
         # if a POST (or any other method) we'll create a blank form
         else:
             form = GraphsForm(request.user.pk)

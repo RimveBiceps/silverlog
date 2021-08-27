@@ -4,8 +4,8 @@
 {% load crispy_forms_tags %}
 
 <div class="container py-1">
-  <h2>Graphs</h2>
-  Graphs of your favorite companies.
+    <h2>Graphs</h2>
+    Graphs of your favorite companies.
 </div>
 
 <form method="GET">
@@ -14,18 +14,39 @@
     <button class="btn btn-primary" type="submit">Enter</button>
 </form>
 
+<!--Company info table-->
+{% if meta_data %}
+<table class="table table-bordered">
+    {% for key, value in meta_data.items %}
+    <tr>
+        <td><b>{{key}}</b></td>
+        <td>{{value}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<!--Stock data table-->
 {% if graph_result_data %}
 <table class="table table-bordered">
-    {% for key, values in graph_result_data.items %}
-   
-        
-        {% for k, v in values.items %}
-        <tr>
-        <td>{{k}}</td>
-        <td>{{v}}</td>
-    </tr>
-        {% endfor %}
+    <th>Date</th>
+    <th>Open</th>
+    <th>High</th>
+    <th>Low</th>
+    <th>Close</th>
+    <th>Volume</th>
 
+    {% for first_dict_key, first_dict_values in graph_result_data.items %}
+    {% for second_dict_key, second_dict_values in first_dict_values.items %}
+    <tr>
+        <td>{{second_dict_key}}</td>
+        {% for third_dict_key, third_dict_values in second_dict_values.items %}
+
+        <td>{{third_dict_values}}</td>
+
+        {% endfor %}
+    </tr>
+    {% endfor %}
     {% endfor %}
 </table>
 {% endif %}
