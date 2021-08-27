@@ -14,6 +14,9 @@ from django.http import HttpResponse
 
 from .models import FavoriteCompanies
 
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers.gchart import LineChart
+
 
 @login_required
 def handle_company(request):
@@ -113,9 +116,44 @@ def handle_graphs(request):
                 context["graph_result_data"] = response_json
                 context["meta_data"] = response_json['Meta Data']
                 del context['graph_result_data']['Meta Data']  # meta data will be saved in meta_data key
+
+                generate_stock_chart(context, time_series)
         # if a POST (or any other method) we'll create a blank form
         else:
             form = GraphsForm(request.user.pk)
 
     context["form"] = form
     return render(request=request, template_name="alphavantage_api/graphs.html", context=context)
+
+
+def generate_stock_chart(context, time_series):
+    chart_data = [
+        ['Date', 'Close Price']
+    ]
+    time_series_name = get_time_series_name(time_series)
+    stock_dates_with_prices = context["graph_result_data"][time_series_name]
+    # make list of dates and prices for chart
+    for date, prices_dict in reversed(stock_dates_with_prices.items()):
+        date_with_close_price = [date, float(prices_dict['4. close'])]
+        chart_data.append(date_with_close_price)
+
+    # DataSource object
+    data_source = SimpleDataSource(data=chart_data)
+    # Chart object with parameters
+    chart = LineChart(data_source, height=800, width=1204, options={
+        'title': 'Stock Graph',
+        'legend': {'position': 'bottom'},
+        'colors': ['red']
+    })
+    context['chart'] = chart
+
+
+def get_time_series_name(time_series):
+    res = ''
+    if time_series == 'TIME_SERIES_DAILY':
+        res = 'Time Series (Daily)'
+    elif time_series == 'TIME_SERIES_WEEKLY':
+        res = 'Weekly Time Series'
+    elif time_series == 'TIME_SERIES_MONTHLY':
+        res = 'Monthly Time Series'
+    return res
