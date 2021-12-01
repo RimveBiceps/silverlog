@@ -9,7 +9,7 @@
 	<form method="POST">
 		{% csrf_token %}
 		{{ register_form|crispy }}
-		<button class="btn btn-primary" type="submit">Register</button>
+		<button id="register" class="btn btn-primary" type="submit">Register</button>
 	</form>
 	{% for message in messages %}
 	<div class="alert alert-danger mt-2" role="alert">
